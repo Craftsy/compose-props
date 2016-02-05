@@ -2,7 +2,7 @@ import _ from 'lodash';
 import shallowequal from 'shallowequal';
 
 /**
- * [mapStateToProps description]
+ * [mapStateToProps method type description]
  * (a -> b -> b) -> (a -> b -> b)
  */
 export function mapStateToProps(propsMapper) {
@@ -12,7 +12,7 @@ export function mapStateToProps(propsMapper) {
 }
 
 /**
- * [mapPropsOnChange description]
+ * [mapPropsOnChange method type description]
  * [k] -> (a -> b -> b) -> (a -> b -> b)
  */
 export function mapPropsOnChange(dependentPropKeys, propsMapper) {
@@ -36,7 +36,7 @@ export function mapPropsOnChange(dependentPropKeys, propsMapper) {
 }
 
 /**
- * [setPropTypes description]
+ * [setPropTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
 export function setPropTypes(propTypes, viewModelName) {
@@ -54,8 +54,26 @@ export function setPropTypes(propTypes, viewModelName) {
 }
 
 /**
- * [compose description]
- * [(a -> b -> b)] -> b
+ * [setStateTypes method type description]
+ * (c -> d) -> (a -> b -> b)
+ */
+export function setStateTypes(stateTypes, viewModelName) {
+  return (state, props) => {
+    if (process.env.NODE_ENV !== 'production') {
+      Object.keys(stateTypes).forEach((key) => {
+        const message = stateTypes[key](state, key, viewModelName);
+        if (message) {
+          console.error(message);
+        }
+      })
+    }
+    return props;
+  }
+}
+
+/**
+ * [compose method type description]
+ * [(a -> b -> b)] -> (a -> b -> b)
  */
 export function compose(...funcs) {
   return (state, props) => {

@@ -1,5 +1,5 @@
 import test from 'tape';
-import {mapStateToProps, mapPropsOnChange, setPropTypes, compose} from '../index.js';
+import {mapStateToProps, mapPropsOnChange, setPropTypes, setStateTypes, compose} from '../index.js';
 import {PropTypes} from 'react';
 
 test('mapStateToProps', function (t) {
@@ -67,13 +67,14 @@ test('setPropTypes', function (t) {
   t.plan(4);
   const state = {};
   const props = {a: 1, b: {c: false}, d: 'b'};
+  const testText = 'setPropTypesTest';
 
   const testPropTypes = {
     a: PropTypes.number.isRequired,
     b: PropTypes.shape({c: PropTypes.bool.isRequired}).isRequired,
     d: PropTypes.string.isRequired,
   }
-  const statePropsFunc = setPropTypes(testPropTypes, 'setPropTypesTest');
+  const statePropsFunc = setPropTypes(testPropTypes, testText);
   t.deepEqual(
     statePropsFunc(state, props),
     {a: 1, b: {c: false}, d: 'b'},
@@ -82,7 +83,7 @@ test('setPropTypes', function (t) {
   t.equal(
     testError,
     'no errors',
-    'Should not error with incorrect props'
+    'Should not error with correct props'
   );
 
   const badProps = {a: '1', b: {c: false}, d: 'b'};
@@ -92,14 +93,60 @@ test('setPropTypes', function (t) {
     'Props should not mutate'
   );
   t.equal(
+    testError.toString().includes(testText),
     true,
-    RegExp('setPropTypesTest').test(testError),
     'Should error with incorrect props'
   );
 
   // clean up console.error
   console.error = oldError;
 });
+
+test('setStateTypes', function (t) {
+  // mocking console.error for test purposes... gross...
+  let testError = 'no errors';
+  const oldError = console.error;
+  console.error = (err) => {
+    testError = err;
+  }
+
+  t.plan(4);
+  const state = {test: [{name: 'bob'}], stuff: {opt: true}};
+  const props = {a: 1};
+  const testText = 'setStateTypesTest';
+
+  const testStateTypes = {
+    test: PropTypes.arrayOf(PropTypes.shape({name: PropTypes.string.isRequired}).isRequired).isRequired,
+    stuff: PropTypes.shape({opt: PropTypes.bool.isRequired}).isRequired,
+  }
+  const statePropsFunc = setStateTypes(testStateTypes, testText);
+  t.deepEqual(
+    statePropsFunc(state, props),
+    {a: 1},
+    'Props should not mutate'
+  );
+  t.equal(
+    testError,
+    'no errors',
+    'Should not error with correct state'
+  );
+
+  const badState = {test: ['a'], stuff: {opt: true}};
+  t.deepEqual(
+    statePropsFunc(badState, props),
+    {a: 1},
+    'Props should not mutate'
+  );
+  t.equal(
+    testError.toString().includes(testText),
+    true,
+    'Should error with incorrect state'
+  );
+
+  // clean up console.error
+  console.error = oldError;
+});
+
 
 test('compose works with functions that take in (state, props)', function (t) {
   t.plan(3);
@@ -125,7 +172,7 @@ test('compose works with functions that take in (state, props)', function (t) {
   t.deepEqual(testProps, {a: 2, b: 2}, 'correct output');
 });
 
-test('compose works with mapStateToProps, setPropTypes, and mapPropsOnChange', (t) => {
+test('compose works with mapStateToProps, setPropTypes, setStateTypes, and mapPropsOnChange', (t) => {
   // mocking console.error for test purposes... gross...
   let testError = 'no errors';
   const oldError = console.error;
@@ -139,10 +186,16 @@ test('compose works with mapStateToProps, setPropTypes, and mapPropsOnChange', (
   let calledOnChangeCount = 0;
 
   const statePropsFunc = compose(
+    setStateTypes({
+      peeps: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        extra: PropTypes.number.isRequired
+      }).isRequired).isRequired,
+    }),
     setPropTypes({id: PropTypes.string.isRequired}),
     mapStateToProps((state, props) => {
       calledComposeCount += 1;
-      return {peep: state.peeps[props.id]};
+      return {peep: state.peeps.filter((peep)=>peep.id === props.id)[0]};
     }),
     mapPropsOnChange(['peep'], (state, {peep}) => {
       calledOnChangeCount += 1;
@@ -150,12 +203,12 @@ test('compose works with mapStateToProps, setPropTypes, and mapPropsOnChange', (
     })
   );
 
-  const initState = {peeps: {bob: {extra: 1}, susan: {extra: 2}}};
+  const initState = {peeps: [{id: 'bob', extra: 1}, {id: 'susan', extra: 2}]};
   const initProps = {id: 'bob'};
 
   t.deepEqual(
     statePropsFunc(initState, initProps),
-    {peep: {extra: 1}, count: 2, id: 'bob'},
+    {peep: {extra: 1, id: 'bob'}, count: 2, id: 'bob'},
     'Computed props from compose are correct'
   );
   t.equal(calledComposeCount, 1, 'Compose called once');
@@ -170,7 +223,7 @@ test('compose works with mapStateToProps, setPropTypes, and mapPropsOnChange', (
   const newProps = {id: 'susan'};
   t.deepEqual(
     statePropsFunc(initState, newProps),
-    {peep: {extra: 2}, count: 3, id: 'susan'},
+    {peep: {extra: 2, id: 'susan'}, count: 3, id: 'susan'},
     'Computed props from compose are correct with new props'
   );
   t.equal(calledComposeCount, 3, 'Compose called twice');
