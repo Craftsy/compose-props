@@ -1,5 +1,5 @@
 import test from 'tape';
-import {mapStateToProps, mapPropsOnChange, setPropTypes, setStateTypes, compose} from '../index.js';
+import {mapStateToProps, mapPropsOnChange, setPropTypes, setStateTypes, compose} from '../src/index.js';
 import {PropTypes} from 'react';
 
 test('mapStateToProps', function (t) {
