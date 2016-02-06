@@ -6,6 +6,7 @@ example use with [react-redux](https://github.com/rackt/react-redux) `connect`:
 ```
 import {compoes, setStateTypes, setPropTypes, mapStateToProps, mapPropsOnChange} from 'pure-compose';\
 import {connect} from 'react-redux';
+import {PropTypes} from 'react';
 import View from './View.jsx';
 
 const pureCompose = compose(
