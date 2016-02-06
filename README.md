@@ -1,4 +1,4 @@
-# pure-recompose
+# compose-props
 recompose minus react dependency
 
 example use with [react-redux](https://github.com/rackt/react-redux) `connect`:
