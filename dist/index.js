@@ -11,9 +11,13 @@ exports.setPropTypes = setPropTypes;
 exports.setStateTypes = setStateTypes;
 exports.compose = compose;
 
-var _lodash = require('lodash');
+var _pick = require('lodash/pick');
 
-var _lodash2 = _interopRequireDefault(_lodash);
+var _pick2 = _interopRequireDefault(_pick);
+
+var _omit = require('lodash/omit');
+
+var _omit2 = _interopRequireDefault(_omit);
 
 var _shallowequal = require('shallowequal');
 
@@ -40,7 +44,7 @@ function mapPropsOnChange(dependentPropKeys, propsMapper) {
       computedProps = undefined;
   return function localMapPropsOnChange(state, props) {
     var pickDependentProps = function pickDependentProps(props) {
-      return _lodash2.default.pick(props, dependentPropKeys);
+      return (0, _pick2.default)(props, dependentPropKeys);
     };
     if (!computedProps) {
       prevProps = props;
@@ -51,7 +55,7 @@ function mapPropsOnChange(dependentPropKeys, propsMapper) {
         prevProps = props;
       }
     }
-    return _extends({}, computedProps, _lodash2.default.omit(props, dependentPropKeys));
+    return _extends({}, computedProps, (0, _omit2.default)(props, dependentPropKeys));
   };
 }
 

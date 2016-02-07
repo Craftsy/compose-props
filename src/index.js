@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import pick from 'lodash/pick';
+import omit from 'lodash/omit';
 import shallowequal from 'shallowequal';
 
 /**
@@ -18,7 +19,7 @@ export function mapStateToProps(propsMapper) {
 export function mapPropsOnChange(dependentPropKeys, propsMapper) {
   let prevProps, computedProps;
   return function localMapPropsOnChange(state, props) {
-    const pickDependentProps = props => _.pick(props, dependentPropKeys);
+    const pickDependentProps = props => pick(props, dependentPropKeys);
     if (!computedProps) {
       prevProps = props;
       computedProps = propsMapper(state, props);
@@ -31,7 +32,7 @@ export function mapPropsOnChange(dependentPropKeys, propsMapper) {
         prevProps = props;
       }
     }
-    return {...computedProps, ..._.omit(props, dependentPropKeys)};
+    return {...computedProps, ...omit(props, dependentPropKeys)};
   }
 }
 
