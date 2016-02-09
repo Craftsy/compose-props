@@ -1,5 +1,5 @@
 # compose-props
-recompose minus react dependency
+[recompose](https://github.com/acdlite/recompose) minus react dependency
 
 example use with [react-redux](https://github.com/rackt/react-redux) `connect`:
 
