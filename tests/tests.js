@@ -55,6 +55,26 @@ test('mapPropsOnChange', function (t) {
   t.equal(mapStateToPropsFuncCalled, 2, 'Props changed, propMapper function called');
 });
 
+test('mapPropsOnChange - computed props overwrite input props', function (t) {
+  t.plan(1);
+  const state = {};
+  const props = {a: 1, b: 2};
+
+  let mapStateToPropsFuncCalled = 0;
+
+  const newPropsFunction = function(state, {b}) {
+    return {
+      a: b,
+    }
+  }
+  const statePropsFunc = mapPropsOnChange(['b'], newPropsFunction);
+  t.deepEqual(
+    statePropsFunc(state, props),
+    {a: 2},
+    'Correctly overwritten output props'
+  );
+});
+
 
 test('setPropTypes', function (t) {
   // mocking console.error for test purposes... gross...

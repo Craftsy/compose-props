@@ -7,7 +7,7 @@ import shallowequal from 'shallowequal';
  * (a -> b -> b) -> (a -> b -> b)
  */
 export function mapStateToProps(propsMapper) {
-  return (state, props) => {
+  return function mapStateToProps(state, props) {
     return {...props, ...propsMapper(state, props)};
   }
 }
@@ -18,12 +18,12 @@ export function mapStateToProps(propsMapper) {
  */
 export function mapPropsOnChange(dependentPropKeys, propsMapper) {
   let prevProps, computedProps;
-  return function localMapPropsOnChange(state, props) {
-    const pickDependentProps = props => pick(props, dependentPropKeys);
+  return function mapPropsOnChange(state, props) {
     if (!computedProps) {
       prevProps = props;
       computedProps = propsMapper(state, props);
     } else {
+      const pickDependentProps = props => pick(props, dependentPropKeys);
       if (!shallowequal(
         pickDependentProps(prevProps),
         pickDependentProps(props)
@@ -32,7 +32,7 @@ export function mapPropsOnChange(dependentPropKeys, propsMapper) {
         prevProps = props;
       }
     }
-    return {...computedProps, ...omit(props, dependentPropKeys)};
+    return {...omit(props, dependentPropKeys), ...computedProps};
   }
 }
 
@@ -41,7 +41,7 @@ export function mapPropsOnChange(dependentPropKeys, propsMapper) {
  * (c -> d) -> (a -> b -> b)
  */
 export function setPropTypes(propTypes, viewModelName) {
-  return (state, props) => {
+  return function setPropTypes(state, props) {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(propTypes).forEach((key) => {
         const message = propTypes[key](props, key, viewModelName);
@@ -59,7 +59,7 @@ export function setPropTypes(propTypes, viewModelName) {
  * (c -> d) -> (a -> b -> b)
  */
 export function setStateTypes(stateTypes, viewModelName) {
-  return (state, props) => {
+  return function setStateTypes(state, props) {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(stateTypes).forEach((key) => {
         const message = stateTypes[key](state, key, viewModelName);
@@ -77,9 +77,10 @@ export function setStateTypes(stateTypes, viewModelName) {
  * [(a -> b -> b)] -> (a -> b -> b)
  */
 export function compose(...funcs) {
-  return (state, props) => {
+  return function compose(state, props) {
+    props = props || {};
     return funcs.reduce((accProps, func) => {
-      return {...accProps, ...func(state, accProps)};
+      return func(state, accProps);
     }, props);
   }
 }
