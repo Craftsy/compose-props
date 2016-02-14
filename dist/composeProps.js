@@ -30,7 +30,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * (a -> b -> b) -> (a -> b -> b)
  */
 function mapStateToProps(propsMapper) {
-  return function (state, props) {
+  return function mapStateToProps(state, props) {
     return _extends({}, props, propsMapper(state, props));
   };
 }
@@ -42,20 +42,20 @@ function mapStateToProps(propsMapper) {
 function mapPropsOnChange(dependentPropKeys, propsMapper) {
   var prevProps = undefined,
       computedProps = undefined;
-  return function localMapPropsOnChange(state, props) {
-    var pickDependentProps = function pickDependentProps(props) {
-      return (0, _pick2.default)(props, dependentPropKeys);
-    };
+  return function mapPropsOnChange(state, props) {
     if (!computedProps) {
       prevProps = props;
       computedProps = propsMapper(state, props);
     } else {
+      var pickDependentProps = function pickDependentProps(props) {
+        return (0, _pick2.default)(props, dependentPropKeys);
+      };
       if (!(0, _shallowequal2.default)(pickDependentProps(prevProps), pickDependentProps(props))) {
         computedProps = propsMapper(state, props);
         prevProps = props;
       }
     }
-    return _extends({}, computedProps, (0, _omit2.default)(props, dependentPropKeys));
+    return _extends({}, (0, _omit2.default)(props, dependentPropKeys), computedProps);
   };
 }
 
@@ -64,7 +64,7 @@ function mapPropsOnChange(dependentPropKeys, propsMapper) {
  * (c -> d) -> (a -> b -> b)
  */
 function setPropTypes(propTypes, viewModelName) {
-  return function (state, props) {
+  return function setPropTypes(state, props) {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(propTypes).forEach(function (key) {
         var message = propTypes[key](props, key, viewModelName);
@@ -82,7 +82,7 @@ function setPropTypes(propTypes, viewModelName) {
  * (c -> d) -> (a -> b -> b)
  */
 function setStateTypes(stateTypes, viewModelName) {
-  return function (state, props) {
+  return function setStateTypes(state, props) {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(stateTypes).forEach(function (key) {
         var message = stateTypes[key](state, key, viewModelName);
@@ -104,9 +104,10 @@ function compose() {
     funcs[_key] = arguments[_key];
   }
 
-  return function (state, props) {
+  return function compose(state, props) {
+    props = props || {};
     return funcs.reduce(function (accProps, func) {
-      return _extends({}, accProps, func(state, accProps));
+      return func(state, accProps);
     }, props);
   };
 }
