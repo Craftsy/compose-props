@@ -5,7 +5,7 @@
   "main": "./dist/composeProps.js",
   "scripts": {
     "build": "./node_modules/.bin/babel ./src/composeProps.js --out-file ./dist/composeProps.js",
-    "test": "mocha --require babel-core/register tests/tests.spec.js"
+    "test": "BABEL_ENV=commonjs mocha --compilers js:babel-register tests/tests.spec.js"
   },
   "repository": {
     "type": "git",

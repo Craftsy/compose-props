@@ -1,6 +1,8 @@
 # compose-props
 [recompose](https://github.com/acdlite/recompose) minus react dependency
 
+[![build status](https://img.shields.io/travis/hartzis/compose-props/master.svg?style=flat-square)](https://travis-ci.org/hartzis/compose-props)
+
 example use with [react-redux](https://github.com/rackt/react-redux) `connect`:
 
 ```
