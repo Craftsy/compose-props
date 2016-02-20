@@ -36,20 +36,24 @@ export function mapPropsOnChange(dependentPropKeys, propsMapper) {
   }
 }
 
+function checkObjectTypes(types, obj, viewModelName) {
+  if (process.env.NODE_ENV !== 'production') {
+    Object.keys(types).forEach((key) => {
+      const message = types[key](obj, key, viewModelName);
+      if (message) {
+        console.error(message);
+      }
+    })
+  }
+}
+
 /**
  * [setPropTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
 export function setPropTypes(propTypes, viewModelName) {
   return function setPropTypes(state, props) {
-    if (process.env.NODE_ENV !== 'production') {
-      Object.keys(propTypes).forEach((key) => {
-        const message = propTypes[key](props, key, viewModelName);
-        if (message) {
-          console.error(message);
-        }
-      })
-    }
+    checkObjectTypes(propTypes, props, viewModelName);
     return props;
   }
 }
@@ -60,14 +64,7 @@ export function setPropTypes(propTypes, viewModelName) {
  */
 export function setStateTypes(stateTypes, viewModelName) {
   return function setStateTypes(state, props) {
-    if (process.env.NODE_ENV !== 'production') {
-      Object.keys(stateTypes).forEach((key) => {
-        const message = stateTypes[key](state, key, viewModelName);
-        if (message) {
-          console.error(message);
-        }
-      })
-    }
+    checkObjectTypes(stateTypes, state, viewModelName);
     return props;
   }
 }
