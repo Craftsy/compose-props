@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {PropTypes} from 'react';
 import View from './View.jsx';
 
-const pureCompose = compose(
+const composeProps = compose(
   setStateTypes({
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -26,5 +26,5 @@ const pureCompose = compose(
   })
 );
 
-export default connect(pureCompose)(View);
+export default connect(composeProps)(View);
 ```
