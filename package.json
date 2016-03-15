@@ -5,7 +5,7 @@
   "main": "./dist/composeProps.js",
   "scripts": {
     "build": "./node_modules/.bin/babel ./src/composeProps.js --out-file ./dist/composeProps.js",
-    "test": "BABEL_ENV=commonjs mocha --compilers js:babel-register tests/tests.spec.js"
+    "test": "node_modules/.bin/standard && BABEL_ENV=commonjs mocha --compilers js:babel-register tests/tests.spec.js"
   },
   "repository": {
     "type": "git",
@@ -24,10 +24,16 @@
     "babel-register": "^6.5.2",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "react": "^0.14.7"
+    "react": "^0.14.7",
+    "standard": "^6.0.8"
   },
   "dependencies": {
-    "lodash": "^4.2.1",
+    "lodash": "^3.10.1",
     "shallowequal": "^0.2.2"
+  },
+  "standard": {
+    "ignore": [
+      "/dist/"
+    ]
   }
 }
