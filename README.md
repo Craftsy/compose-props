@@ -1,6 +1,7 @@
 # compose-props
 [recompose](https://github.com/acdlite/recompose) minus react dependency... ish
 
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![build status](https://img.shields.io/travis/craftsy/compose-props/master.svg?style=flat-square)](https://travis-ci.org/craftsy/compose-props)
 
 Each compose-props method has the same argument signature of `(state, props)` and should return a new 'props' object.
