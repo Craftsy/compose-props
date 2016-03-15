@@ -9,7 +9,7 @@ Each compose-props method has the same argument signature of `(state, props)` an
 `state` and/or the first argument stays consistent.
 
 ####composeProps(...functions)
-You can combine/compose `compose-props` methods using `composeProps`, **but it is not a standard compose function**.
+You can 'compose' `compose-props` methods using `composeProps`, **but it is not a standard compose function**.
 
 Each function you pass to `composeProps` will be called with `(state, props)` and should return a new 'props' object.
 
