@@ -1,6 +1,6 @@
 {
   "name": "compose-props",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "recompose minus react dependency",
   "main": "./dist/composeProps.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hartzis/compose-props.git"
+    "url": "git+https://github.com/Craftsy/compose-props.git"
   },
   "author": "Brian Hartz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hartzis/compose-props/issues"
+    "url": "https://github.com/Craftsy/compose-props/issues"
   },
-  "homepage": "https://github.com/hartzis/compose-props#readme",
+  "homepage": "https://github.com/Craftsy/compose-props#readme",
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-preset-es2015": "^6.3.13",
