@@ -38,25 +38,31 @@ export function mapPropsOnChange (dependentPropKeys, propsMapper) {
   }
 }
 
-function checkObjectTypes (types, obj, viewModelName) {
-  if (process.env.NODE_ENV !== 'production') {
-    Object.keys(types).forEach((key) => {
+export function hasObjectTypeError (types, obj, viewModelName = 'hasObjectTypeError Checker') {
+  // Always perform checks when running on react native, and short circuit if checks fail
+  if ((typeof navigator !== 'undefined' && navigator.product === 'ReactNative') ||
+  (typeof process === 'undefined' || process.env.NODE_ENV !== 'production')) {
+    const keys = Object.keys(types)
+    for (let i in keys) {
+      const key = keys[i]
       const message = types[key](obj, key, viewModelName)
       if (message) {
-        console.error(message)
+        console.warn(message)
+        return true
       }
-    })
+    }
   }
+  return false
 }
 
 /**
  * [setPropTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
-export function setPropTypes (propTypes, viewModelName) {
+export function setPropTypes (propTypes, viewModelName = 'setPropTypes Checker') {
   return function setPropTypesMethod (state, props) {
-    checkObjectTypes(propTypes, props, viewModelName)
-    return props
+    // return null if checker found errors
+    return hasObjectTypeError(propTypes, props, viewModelName) ? null : props
   }
 }
 
@@ -64,10 +70,9 @@ export function setPropTypes (propTypes, viewModelName) {
  * [setStateTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
-export function setStateTypes (stateTypes, viewModelName) {
+export function setStateTypes (stateTypes, viewModelName = 'setStateTypes Checker') {
   return function setStateTypesMethod (state, props) {
-    checkObjectTypes(stateTypes, state, viewModelName)
-    return props
+    return hasObjectTypeError(stateTypes, state, viewModelName) ? null : props
   }
 }
 
@@ -79,6 +84,8 @@ export function composeProps (...funcs) {
   return function composePropsMethod (state, props) {
     props = props || {}
     return funcs.reduce((accProps, func) => {
+      // Short circuit if accProps are null, React Native helper
+      if (accProps === null) return null
       return func(state, accProps)
     }, props)
   }
