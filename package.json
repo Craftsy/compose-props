@@ -5,6 +5,7 @@
   "main": "./dist/composeProps.js",
   "scripts": {
     "build": "./node_modules/.bin/babel ./src/composeProps.js --out-file ./dist/composeProps.js",
+    "prepublish": "npm run build",
     "test": "node_modules/.bin/standard && BABEL_ENV=commonjs mocha --compilers js:babel-register tests/tests.spec.js"
   },
   "repository": {
