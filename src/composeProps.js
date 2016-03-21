@@ -39,18 +39,17 @@ export function mapPropsOnChange (dependentPropKeys, propsMapper) {
 }
 
 export function hasObjectTypeError (types, obj, viewModelName = 'hasObjectTypeError Checker') {
-  // Always perform checks when running on react native, and short circuit if checks fail
+  // Always perform checks when running on react native
   if ((typeof navigator !== 'undefined' && navigator.product === 'ReactNative') ||
   (typeof process === 'undefined' || process.env.NODE_ENV !== 'production')) {
-    const keys = Object.keys(types)
-    for (let i in keys) {
-      const key = keys[i]
+    return Object.keys(types).reduce((acc, key) => {
       const message = types[key](obj, key, viewModelName)
       if (message) {
         console.warn(message)
         return true
       }
-    }
+      return acc || false
+    }, false)
   }
   return false
 }
