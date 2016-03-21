@@ -9,6 +9,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.mapStateToProps = mapStateToProps;
 exports.mapPropsOnChange = mapPropsOnChange;
+exports.hasObjectTypeError = hasObjectTypeError;
 exports.setPropTypes = setPropTypes;
 exports.setStateTypes = setStateTypes;
 exports.composeProps = composeProps;
@@ -58,25 +59,33 @@ function mapPropsOnChange(dependentPropKeys, propsMapper) {
   };
 }
 
-function checkObjectTypes(types, obj, viewModelName) {
-  if (process.env.NODE_ENV !== 'production') {
-    Object.keys(types).forEach(function (key) {
+function hasObjectTypeError(types, obj) {
+  var viewModelName = arguments.length <= 2 || arguments[2] === undefined ? 'hasObjectTypeError Checker' : arguments[2];
+
+  // Always perform checks when running on react native
+  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative' || typeof process === 'undefined' || process.env.NODE_ENV !== 'production') {
+    return Object.keys(types).reduce(function (acc, key) {
       var message = types[key](obj, key, viewModelName);
       if (message) {
-        console.error(message);
+        console.warn(message);
+        return true;
       }
-    });
+      return acc || false;
+    }, false);
   }
+  return false;
 }
 
 /**
  * [setPropTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
-function setPropTypes(propTypes, viewModelName) {
+function setPropTypes(propTypes) {
+  var viewModelName = arguments.length <= 1 || arguments[1] === undefined ? 'setPropTypes Checker' : arguments[1];
+
   return function setPropTypesMethod(state, props) {
-    checkObjectTypes(propTypes, props, viewModelName);
-    return props;
+    // return null if checker found errors
+    return hasObjectTypeError(propTypes, props, viewModelName) ? null : props;
   };
 }
 
@@ -84,10 +93,11 @@ function setPropTypes(propTypes, viewModelName) {
  * [setStateTypes method type description]
  * (c -> d) -> (a -> b -> b)
  */
-function setStateTypes(stateTypes, viewModelName) {
+function setStateTypes(stateTypes) {
+  var viewModelName = arguments.length <= 1 || arguments[1] === undefined ? 'setStateTypes Checker' : arguments[1];
+
   return function setStateTypesMethod(state, props) {
-    checkObjectTypes(stateTypes, state, viewModelName);
-    return props;
+    return hasObjectTypeError(stateTypes, state, viewModelName) ? null : props;
   };
 }
 
@@ -103,6 +113,8 @@ function composeProps() {
   return function composePropsMethod(state, props) {
     props = props || {};
     return funcs.reduce(function (accProps, func) {
+      // Short circuit if accProps are null, React Native helper
+      if (accProps === null) return null;
       return func(state, accProps);
     }, props);
   };
