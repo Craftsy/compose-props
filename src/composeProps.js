@@ -82,10 +82,11 @@ export function setStateTypes (stateTypes, viewModelName = 'setStateTypes Checke
 export function composeProps (...funcs) {
   return function composePropsMethod (state, props) {
     props = props || {}
-    return funcs.reduce((accProps, func) => {
+    const composedProps = funcs.reduce((accProps, func) => {
       // Short circuit if accProps are null, React Native helper
       if (accProps === null) return null
       return func(state, accProps)
     }, props)
+    return composedProps || {}
   }
 }
