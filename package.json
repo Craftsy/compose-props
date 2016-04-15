@@ -1,6 +1,6 @@
 {
   "name": "compose-props",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "recompose minus react dependency",
   "main": "./dist/composeProps.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "standard": "^6.0.8"
   },
   "dependencies": {
-    "lodash": "^3.10.1",
+    "lodash": "^4.11.1",
     "shallowequal": "^0.2.2"
   },
   "standard": {

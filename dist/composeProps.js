@@ -14,7 +14,13 @@ exports.setPropTypes = setPropTypes;
 exports.setStateTypes = setStateTypes;
 exports.composeProps = composeProps;
 
-var _lodash = require('lodash');
+var _pick = require('lodash/pick');
+
+var _pick2 = _interopRequireDefault(_pick);
+
+var _omit = require('lodash/omit');
+
+var _omit2 = _interopRequireDefault(_omit);
 
 var _shallowequal = require('shallowequal');
 
@@ -48,14 +54,14 @@ function mapPropsOnChange(dependentPropKeys, propsMapper) {
       computedProps = propsMapper(state, props);
     } else {
       var pickDependentProps = function pickDependentProps(props) {
-        return (0, _lodash.pick)(props, dependentPropKeys);
+        return (0, _pick2.default)(props, dependentPropKeys);
       };
       if (!(0, _shallowequal2.default)(pickDependentProps(prevProps), pickDependentProps(props))) {
         computedProps = propsMapper(state, props);
         prevProps = props;
       }
     }
-    return _extends({}, (0, _lodash.omit)(props, dependentPropKeys), computedProps);
+    return _extends({}, (0, _omit2.default)(props, dependentPropKeys), computedProps);
   };
 }
 
@@ -112,10 +118,11 @@ function composeProps() {
 
   return function composePropsMethod(state, props) {
     props = props || {};
-    return funcs.reduce(function (accProps, func) {
+    var composedProps = funcs.reduce(function (accProps, func) {
       // Short circuit if accProps are null, React Native helper
       if (accProps === null) return null;
       return func(state, accProps);
     }, props);
+    return composedProps || {};
   };
 }
