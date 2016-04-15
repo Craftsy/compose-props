@@ -240,7 +240,7 @@ describe('compose-props', () => {
         testError = 'no errors'
       })
 
-      it('should \'short circuit\' when a composed function returns null', () => {
+      it('should \'short circuit\' when a composed function returns null, and return an empty object({})', () => {
         const testStateProps = { set: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired }
         let count = 0
         const initState = {set: ['a', 'b']}
@@ -261,7 +261,7 @@ describe('compose-props', () => {
         const firstRunProps = statePropsFunc(initState, initProps)
         expect(testError).to.not.equal('no errors')
         expect(count).to.equal(1)
-        expect(firstRunProps).to.equal(null)
+        expect(firstRunProps).to.deep.equal({})
       })
 
       it('should work with mapStateToProps, setPropTypes, setStateTypes, and mapPropsOnChange', () => {
