@@ -1,6 +1,6 @@
 {
   "name": "compose-props",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "recompose minus react dependency",
   "main": "./lib/composeProps.js",
   "scripts": {
