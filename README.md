@@ -2,7 +2,7 @@
 [recompose](https://github.com/acdlite/recompose) minus react dependency... ish
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![build status](https://img.shields.io/travis/Craftsy/compose-props/master.svg?style=flat-square)](https://travis-ci.org/Craftsy/compose-props)
+[![build status](https://img.shields.io/travis/Craftsy/compose-props/master.svg?style=flat-square)](https://travis-ci.org/Craftsy/compose-props) [![npm version](https://img.shields.io/npm/v/compose-props.svg?style=flat-square)](https://www.npmjs.com/package/compose-props)
 
 Each compose-props method has the same argument signature of `(state, props)` and should return a new 'props' object.
 
