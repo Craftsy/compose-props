@@ -22,7 +22,7 @@ Each function you pass to `composeProps` will be called with `(state, props)` an
 #####React Native
 At Craftsy we are using this library both on the web and on ios/android with [React Native](https://facebook.github.io/react-native/).
 
-For this reason we use the `setStateTypes` and `setPropTypes` checkers as fail safes that return and empty object`{}` from `composeProps` when there is a state/prop type error.
+For this reason we use the `setStateTypes` and `setPropTypes` checkers as fail safes that return an empty object`{}` from `composeProps` when there is a state/prop type error.
 
 ####setStateTypes / setPropTypes - object value checkers
 These can and probably should be used for your input contract to `composeProps` and your output contract. They are based off [react propTypes](https://facebook.github.io/react/docs/reusable-components.html#prop-validation) and require the same method signature, `function(props, propName, componentName)`.
